@@ -1,4 +1,4 @@
-import { MongoClient } from 'mongodb'
+import { Collection, MongoClient } from 'mongodb'
 
 export const MongoHelper = {
   client: null as MongoClient,
@@ -11,22 +11,9 @@ export const MongoHelper = {
   },
   async disconnect (): Promise<void> {
     await this.client.close()
+  },
+
+  getCollection (name: string): Collection {
+    return this.client.db().Collection(name)
   }
 }
-
-/*
-const mongoSetup = require('@shelf/jest-mongodb/setup'); 
-
-module.exports = async function globalSetup() {
-  await mongoSetup();
-  // process.env.MONGO_URL is now set by
-  // https://github.com/shelfio/jest-mongodb/blob/fcda766bfa433644a7383993467ccaa06dfea28b/setup.js#L26
-  await mongoose.connect(process.env.MONGO_URL, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useCreateIndex: true,
-    useFindAndModify: false,
-  });
-};
-
-*/
