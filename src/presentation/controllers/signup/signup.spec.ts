@@ -1,11 +1,11 @@
-import { SignUpController } from "./signup"
-import { InvalidParamError, MissingParamError, ServerError } from "../../errors"
+import { SignUpController } from './signup'
+import { InvalidParamError, MissingParamError, ServerError } from '../../errors'
 import {
   EmailValidator,
   AddAccount,
   AddAccountModel,
   AccountModel
-} from "./signup-protocols"
+} from './signup-protocols'
 
 const makeEmailValidator = (): EmailValidator => {
   class EmailValidatorStub implements EmailValidator {
@@ -25,7 +25,7 @@ const makeAddAccount = (): AddAccount => {
         email: 'valid_email@mail.com',
         password: 'valid_password'
       }
-      return new Promise(resolve => resolve(fakeAccount))
+      return await new Promise(resolve => resolve(fakeAccount))
     }
   }
   return new AddAccountStub()
@@ -98,7 +98,7 @@ describe('SignUp Controller', () => {
       body: {
         name: 'any_name',
         email: 'any_email@email.com',
-        password: 'any_password',
+        password: 'any_password'
       }
     }
     const httpResponse = await sut.handle(httpRequest)
@@ -113,7 +113,7 @@ describe('SignUp Controller', () => {
         name: 'any_name',
         email: 'any_email@email.com',
         password: 'any_password',
-        passwordConfirmation: 'invalid_password',
+        passwordConfirmation: 'invalid_password'
       }
     }
     const httpResponse = await sut.handle(httpRequest)
@@ -130,7 +130,7 @@ describe('SignUp Controller', () => {
         name: 'any_name',
         email: 'invalid_email@email.com',
         password: 'any_password',
-        passwordConfirmation: 'any_password',
+        passwordConfirmation: 'any_password'
       }
     }
     const httpResponse = await sut.handle(httpRequest)
@@ -147,7 +147,7 @@ describe('SignUp Controller', () => {
         name: 'any_name',
         email: 'any_email@email.com',
         password: 'any_password',
-        passwordConfirmation: 'any_password',
+        passwordConfirmation: 'any_password'
       }
     }
     sut.handle(httpRequest)
@@ -165,7 +165,7 @@ describe('SignUp Controller', () => {
         name: 'any_name',
         email: 'any_email@email.com',
         password: 'any_password',
-        passwordConfirmation: 'any_password',
+        passwordConfirmation: 'any_password'
       }
     }
     const httpResponse = await sut.handle(httpRequest)
@@ -176,7 +176,7 @@ describe('SignUp Controller', () => {
   it('Should return 500 if AddAccount throws', async () => {
     const { sut, addAccountStub } = makeSut()
     jest.spyOn(addAccountStub, 'add').mockImplementationOnce(async () => {
-      return new Promise((resolve, reject) => reject(new Error()))
+      return await new Promise((resolve, reject) => reject(new Error()))
     })
 
     const httpRequest = {
@@ -184,7 +184,7 @@ describe('SignUp Controller', () => {
         name: 'any_name',
         email: 'any_email@email.com',
         password: 'any_password',
-        passwordConfirmation: 'any_password',
+        passwordConfirmation: 'any_password'
       }
     }
     const httpResponse = await sut.handle(httpRequest)
@@ -193,16 +193,15 @@ describe('SignUp Controller', () => {
   })
 
   it('Should call AddAccount with correct values', () => {
-
     const { sut, addAccountStub } = makeSut()
     const addSpy = jest.spyOn(addAccountStub, 'add')
-  
+
     const httpRequest = {
       body: {
         name: 'any_name',
         email: 'any_email@email.com',
         password: 'any_password',
-        passwordConfirmation: 'any_password',
+        passwordConfirmation: 'any_password'
       }
     }
     sut.handle(httpRequest)
@@ -221,17 +220,16 @@ describe('SignUp Controller', () => {
         name: 'valid_name',
         email: 'valid_email@mail.com',
         password: 'valid_password',
-        passwordConfirmation: 'valid_password',
+        passwordConfirmation: 'valid_password'
       }
     }
     const httpResponse = await sut.handle(httpRequest)
     expect(httpResponse.statusCode).toBe(200)
     expect(httpResponse.body).toEqual({
-      id:'valid_id',
+      id: 'valid_id',
       name: 'valid_name',
       email: 'valid_email@mail.com',
-      password: 'valid_password',
+      password: 'valid_password'
     })
   })
 })
-

@@ -1,15 +1,15 @@
-import { DbAddAccount } from "./db-add-account"
+import { DbAddAccount } from './db-add-account'
 import {
   AccountModel,
   AddAccountModel,
   AddAccountRepository,
   Encrypter
-} from "./db-add-account-protocols"
+} from './db-add-account-protocols'
 
 const makeEncrypter = (): Encrypter => {
   class EncrypterStub implements Encrypter {
-    async encrypt(value: string): Promise<string> {
-      return new Promise(resolve => resolve('hashed_password'))
+    async encrypt (value: string): Promise<string> {
+      return await new Promise(resolve => resolve('hashed_password'))
     }
   }
   return new EncrypterStub()
@@ -24,7 +24,7 @@ const makeAddAccountRepository = (): AddAccountRepository => {
         email: 'valid_email',
         password: 'hashed_password'
       }
-      return new Promise(resolve => resolve(fakeAccount))
+      return await new Promise(resolve => resolve(fakeAccount))
     }
   }
   return new AddAccountRepositoryStub()
@@ -53,9 +53,9 @@ describe('DbAddAccount UseCase', () => {
 
     const encryptSpy = jest.spyOn(encrypterStub, 'encrypt')
     const accountData = {
-        name: 'valid_name',
-        email: 'valid_email',
-        password: 'valid_password'
+      name: 'valid_name',
+      email: 'valid_email',
+      password: 'valid_password'
     }
     await sut.add(accountData)
     expect(encryptSpy).toHaveBeenCalledWith('valid_password')
